@@ -24,7 +24,21 @@ describe('every route', () => {
       expect(links).toHaveLength(7);
       const current = links.filter((a) => a.getAttribute('aria-current') === 'page');
       expect(current).toHaveLength(1);
-      expect(current[0].getAttribute('href')).toBe(route);
+      const slash = route === '/' ? '/' : `${route}/`;
+      expect(current[0].getAttribute('href')).toBe(slash);
+      const canonical = d.querySelector('link[rel="canonical"]')?.getAttribute('href');
+      expect(canonical).toBe(`https://quocnghia32.github.io${slash}`);
+      const og = (p: string) => d.querySelector(`meta[property="${p}"]`)?.getAttribute('content');
+      expect(og('og:url')).toBe(canonical);
+      expect(og('og:type')).toBe(route === '/' ? 'profile' : 'website');
+      expect(og('og:image')).toBe('https://quocnghia32.github.io/og.png');
+      expect(og('og:image:width')).toBe('1200');
+      expect(og('og:image:height')).toBe('630');
+      expect(og('og:image:alt')?.length).toBeGreaterThan(10);
+      expect(og('og:site_name')).toBe('Nguyen Quoc Nghia');
+      expect(d.querySelector('meta[name="twitter:card"]')?.getAttribute('content')).toBe('summary_large_image');
+      expect(d.querySelector('meta[name="robots"]')).toBeNull();
+      expect(d.querySelector('link[rel="sitemap"]')?.getAttribute('href')).toBe('/sitemap-index.xml');
       expect(d.querySelectorAll('main')).toHaveLength(1);
       expect(d.querySelectorAll('h1')).toHaveLength(1);
       expect(d.querySelector('footer')).not.toBeNull();
@@ -46,6 +60,7 @@ describe('404', () => {
     expect(text(d.querySelector('h1'))).toContain('404');
     expect(d.querySelector('main a[href="/"]')).not.toBeNull();
     expect(d.querySelectorAll('[aria-current="page"]')).toHaveLength(0);
+    expect(d.querySelector('meta[name="robots"]')?.getAttribute('content')).toBe('noindex');
   });
 });
 
@@ -57,7 +72,7 @@ describe('home', () => {
     const socials = [...d.querySelectorAll('[data-socials] a')];
     expect(socials.map((a) => a.getAttribute('aria-label'))).toEqual(['GitHub', 'LinkedIn', 'Email']);
     for (const a of socials) expect(a.querySelector('svg path')).not.toBeNull();
-    expect(d.querySelector('a[href="/projects"]')).not.toBeNull();
+    expect(d.querySelector('a[href="/projects/"]')).not.toBeNull();
     expect(d.querySelector('a[href="/cv.pdf"]')?.hasAttribute('download')).toBe(true);
   });
 
@@ -93,6 +108,17 @@ describe('home', () => {
     expect(img?.getAttribute('width')).toBe('800');
     expect(img?.getAttribute('height')).toBe('1000');
     expect(d.querySelector('[data-hero-visual] [data-terminal]')).not.toBeNull();
+  });
+
+  it('embeds WebSite + ProfilePage JSON-LD only on the home page', async () => {
+    const d = await dom('/');
+    const scripts = d.querySelectorAll('script[type="application/ld+json"]');
+    expect(scripts).toHaveLength(1);
+    const data = JSON.parse(scripts[0].textContent!);
+    expect(data['@graph'].map((n: { '@type': string }) => n['@type'])).toEqual(['WebSite', 'ProfilePage']);
+    expect(d.title).toBe('Nguyen Quoc Nghia · AI Engineer at MoMo');
+    const other = await dom('/projects');
+    expect(other.querySelectorAll('script[type="application/ld+json"]')).toHaveLength(0);
   });
 
   it('shows a two-command terminal card', async () => {

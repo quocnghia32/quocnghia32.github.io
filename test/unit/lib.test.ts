@@ -6,6 +6,7 @@ import { buildLog, topAwards } from '../../src/lib/awards';
 import { splitAuthors, toBibtex } from '../../src/lib/publications';
 import { buildMailto, validateMessage } from '../../src/lib/contact';
 import { CONTACT_ROWS, SOCIALS, iconFor } from '../../src/lib/socials';
+import { SITE, canonicalUrl, structuredData } from '../../src/lib/seo';
 import type { Award, Project, Publication } from '../../src/data/types';
 
 const p = (slug: string, category: Project['category']): Project => ({
@@ -15,7 +16,7 @@ const p = (slug: string, category: Project['category']): Project => ({
 describe('nav', () => {
   it('lists the seven routes in order', () => {
     expect(NAV_ITEMS.map((n) => n.href)).toEqual([
-      '/', '/experience', '/projects', '/skills', '/publications', '/awards', '/contact',
+      '/', '/experience/', '/projects/', '/skills/', '/publications/', '/awards/', '/contact/',
     ]);
   });
 
@@ -196,5 +197,34 @@ describe('socials', () => {
   it('throws on an unknown icon id', () => {
     // @ts-expect-error testing a bad id on purpose
     expect(() => iconFor('myspace')).toThrow();
+  });
+});
+
+describe('seo', () => {
+  it('builds absolute canonical URLs with the trailing slash GitHub Pages redirects to', () => {
+    expect(SITE).toBe('https://quocnghia32.github.io');
+    expect(canonicalUrl('/')).toBe('https://quocnghia32.github.io/');
+    expect(canonicalUrl('/projects')).toBe('https://quocnghia32.github.io/projects/');
+    expect(canonicalUrl('/projects/')).toBe('https://quocnghia32.github.io/projects/');
+    expect(canonicalUrl('')).toBe('https://quocnghia32.github.io/');
+  });
+
+  it('describes the site and the person as a WebSite + ProfilePage graph', () => {
+    const data = structuredData();
+    expect(data['@context']).toBe('https://schema.org');
+    const types = data['@graph'].map((n) => n['@type']);
+    expect(types).toEqual(['WebSite', 'ProfilePage']);
+    const site = data['@graph'][0];
+    expect(site.url).toBe('https://quocnghia32.github.io/');
+    expect(site.name).toBe('Nguyen Quoc Nghia');
+    const person = data['@graph'][1].mainEntity;
+    expect(person['@type']).toBe('Person');
+    expect(person.name).toBe('Nguyen Quoc Nghia');
+    expect(person.alternateName).toContain('Nguyễn Quốc Nghĩa');
+    expect(person.jobTitle).toBe('AI Engineer');
+    expect(person.worksFor.name).toBe('MoMo');
+    expect(person.alumniOf.name).toMatch(/University of Science/);
+    expect(person.image).toBe('https://quocnghia32.github.io/images/portrait.jpg');
+    expect(person.sameAs).toEqual(['https://github.com/quocnghia32', 'https://www.linkedin.com/in/quocnghia32/']);
   });
 });

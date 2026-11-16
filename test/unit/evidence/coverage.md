@@ -1,6 +1,6 @@
 # Unit test coverage
 
-Generated: 2026-11-16T04:01:00.392Z
+Generated: 2026-11-16T05:01:53.840Z
 
 Command: `npm run test:unit`
 
@@ -8,7 +8,7 @@ Command: `npm run test:unit`
 
 | Suites | Tests | Passed | Failed | Skipped |
 |---|---|---|---|---|
-| 8 | 28 | 28 | 0 | 0 |
+| 9 | 30 | 30 | 0 | 0 |
 
 ### Test cases
 
@@ -42,15 +42,17 @@ Command: `npm run test:unit`
 - PASS: socials › contact rows skip email, which already has its own copy box
 - PASS: socials › points email at a mailto link
 - PASS: socials › throws on an unknown icon id
+- PASS: seo › builds absolute canonical URLs with the trailing slash GitHub Pages redirects to
+- PASS: seo › describes the site and the person as a WebSite + ProfilePage graph
 
 ## Coverage (total)
 
 | Metric | Coverage |
 |---|---|
-| lines | 100.00% (121/121) |
-| statements | 100.00% (121/121) |
-| functions | 100.00% (16/16) |
-| branches | 98.18% (54/55) |
+| lines | 100.00% (173/173) |
+| statements | 100.00% (173/173) |
+| functions | 100.00% (18/18) |
+| branches | 98.30% (58/59) |
 
 ## Coverage per file
 
@@ -62,4 +64,5 @@ Command: `npm run test:unit`
 | src/lib/nav.ts | 100% | 100% | 100% | 100% |
 | src/lib/projects.ts | 100% | 100% | 100% | 100% |
 | src/lib/publications.ts | 100% | 100% | 100% | 91.66% |
+| src/lib/seo.ts | 100% | 100% | 100% | 100% |
 | src/lib/socials.ts | 100% | 100% | 100% | 100% |

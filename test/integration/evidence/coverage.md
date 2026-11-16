@@ -1,6 +1,6 @@
 # Integration test coverage
 
-Generated: 2026-11-16T04:27:47.764Z
+Generated: 2026-11-16T05:01:56.281Z
 
 Command: `npm run test:integration`
 
@@ -8,7 +8,7 @@ Command: `npm run test:integration`
 
 | Suites | Tests | Passed | Failed | Skipped |
 |---|---|---|---|---|
-| 17 | 39 | 39 | 0 | 0 |
+| 17 | 40 | 40 | 0 | 0 |
 
 ### Test cases
 
@@ -26,6 +26,7 @@ Command: `npm run test:integration`
 - PASS: home › splits strengths into an AI column and a Software column, three each
 - PASS: home › hero bio covers school, APCS, current role, MoMo work and strengths
 - PASS: home › shows the portrait with fixed dimensions and alt text, with the terminal card beside it
+- PASS: home › embeds WebSite + ProfilePage JSON-LD only on the home page
 - PASS: home › shows a two-command terminal card
 - PASS: projects › renders filters, the featured thesis and one card per project
 - PASS: projects › groups projects into main work and a "built for fun" quant group
@@ -61,10 +62,10 @@ Command: `npm run test:integration`
 
 | Metric | Coverage |
 |---|---|
-| lines | 99.56% (456/458) |
-| statements | 99.56% (456/458) |
-| functions | 97.36% (37/38) |
-| branches | 95.90% (164/171) |
+| lines | 99.62% (527/529) |
+| statements | 99.62% (527/529) |
+| functions | 97.50% (39/40) |
+| branches | 96.13% (174/181) |
 
 ## Coverage per file
 
@@ -79,6 +80,7 @@ Command: `npm run test:integration`
 | src/lib/nav.ts | 100% | 100% | 100% | 100% |
 | src/lib/projects.ts | 87.5% | 87.5% | 66.66% | 100% |
 | src/lib/publications.ts | 100% | 100% | 100% | 70% |
+| src/lib/seo.ts | 100% | 100% | 100% | 100% |
 | src/lib/socials.ts | 100% | 100% | 100% | 66.66% |
 | src/pages/404.astro | 100% | 100% | 100% | 100% |
 | src/pages/awards.astro | 100% | 100% | 100% | 100% |

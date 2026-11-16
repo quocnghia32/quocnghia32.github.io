@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quocnghia32.github.io/sitemap-index.xml

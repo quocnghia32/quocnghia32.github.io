@@ -269,3 +269,39 @@ test('unknown routes return the 404 page', async ({ page }) => {
   await page.getByRole('link', { name: /Back home/ }).click();
   await expect(page).toHaveURL(/\/$/);
 });
+
+test.describe('search engine files', () => {
+  test('robots.txt allows crawling and points at the sitemap', async ({ request }) => {
+    const res = await request.get('/robots.txt');
+    expect(res.status()).toBe(200);
+    const body = await res.text();
+    expect(body).toMatch(/User-agent: \*/);
+    expect(body).toContain('Allow: /');
+    expect(body).toContain('Sitemap: https://quocnghia32.github.io/sitemap-index.xml');
+    await (await import('node:fs/promises')).writeFile(`${EVIDENCE}/robots.txt`, body);
+  });
+
+  test('sitemap lists the seven canonical routes and not the 404 page', async ({ request }) => {
+    const index = await (await request.get('/sitemap-index.xml')).text();
+    const child = index.match(/<loc>https:\/\/quocnghia32\.github\.io(\/sitemap-\d+\.xml)<\/loc>/)![1];
+    const xml = await (await request.get(child)).text();
+    const locs = [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]).sort();
+    expect(locs).toEqual(
+      ['', 'awards/', 'contact/', 'experience/', 'projects/', 'publications/', 'skills/']
+        .map((p) => `https://quocnghia32.github.io/${p}`)
+        .sort(),
+    );
+    await (await import('node:fs/promises')).writeFile(`${EVIDENCE}/sitemap.xml`, xml);
+  });
+
+  test('the social preview image is 1200x630', async ({ page }) => {
+    await page.goto('/');
+    const size = await page.evaluate(async () => {
+      const img = new Image();
+      img.src = '/og.png';
+      await img.decode();
+      return [img.naturalWidth, img.naturalHeight];
+    });
+    expect(size).toEqual([1200, 630]);
+  });
+});

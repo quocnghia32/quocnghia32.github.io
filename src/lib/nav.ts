@@ -5,12 +5,12 @@ export interface NavItem {
 
 export const NAV_ITEMS: readonly NavItem[] = [
   { href: '/', label: 'Home' },
-  { href: '/experience', label: 'Experience' },
-  { href: '/projects', label: 'Projects' },
-  { href: '/skills', label: 'Skills' },
-  { href: '/publications', label: 'Publications' },
-  { href: '/awards', label: 'Awards' },
-  { href: '/contact', label: 'Contact' },
+  { href: '/experience/', label: 'Experience' },
+  { href: '/projects/', label: 'Projects' },
+  { href: '/skills/', label: 'Skills' },
+  { href: '/publications/', label: 'Publications' },
+  { href: '/awards/', label: 'Awards' },
+  { href: '/contact/', label: 'Contact' },
 ];
 
 export function normalizePath(path: string): string {

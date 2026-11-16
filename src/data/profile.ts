@@ -6,6 +6,8 @@ export const profile = {
   footerLine: 'AI Engineer @ MoMo · Ho Chi Minh City, Vietnam',
   email: 'nguyennghia3224.work@gmail.com',
   cv: '/cv.pdf',
+  /** Google Search Console HTML-tag token (content value). Empty until the property is created. */
+  googleSiteVerification: '' as string,
   links: {
     github: 'https://github.com/quocnghia32',
     linkedin: 'https://www.linkedin.com/in/quocnghia32/',
