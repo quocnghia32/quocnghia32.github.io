@@ -1,0 +1,92 @@
+---
+import Base from '../layouts/Base.astro';
+import { awards } from '../data/awards';
+import { buildLog, topAwards } from '../lib/awards';
+
+const top = topAwards(awards);
+const log = buildLog(awards);
+---
+<Base title="Awards" description="Competitive programming record of Nguyen Quoc Nghia: ICPC Asia silver, VOI third prize, Codeforces candidate master.">
+  <p class="eyebrow" data-reveal>~/awards</p>
+  <h1 class="page-title" data-reveal style="--i:1">Accepted.</h1>
+  <p class="lede" data-reveal style="--i:2">Most of my school years went into competitive programming. Here is the submission log.</p>
+
+  <div class="top focus-group">
+    {top.map((a, i) => (
+      <article class="card award" data-top-award data-spotlight data-reveal style={`--i:${i}`}>
+        <div class="row">
+          <div class="medal-year">
+            <svg data-medal width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="15" r="6"></circle><path d="M8.5 10 6 3h4l2 5"></path><path d="M15.5 10 18 3h-4l-2 5"></path>
+            </svg>
+            <span class="mono muted">{a.year}</span>
+          </div>
+          {a.logo && <img class="org" data-org-logo src={a.logo.src} alt={a.logo.alt} height="36" loading="lazy" decoding="async" />}
+        </div>
+        <p class="big">{a.big}</p>
+        <h2>{a.contest}</h2>
+        <p class="muted note">{a.note}</p>
+      </article>
+    ))}
+  </div>
+
+  <div class="log" data-log data-reveal>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th scope="col">#</th><th scope="col">year</th><th scope="col">contest</th><th scope="col">verdict</th></tr>
+        </thead>
+        <tbody>
+          {log.map((l, i) => (
+            <tr style={`--r:${i}`}>
+              <td class="mono muted">{l.n}</td>
+              <td class="mono">{l.year}</td>
+              <td><span class="contest">{l.contest}</span><br /><span class="muted small">{l.note}</span></td>
+              <td class="verdict"><span class="ac mono">Accepted</span><span class="muted small"> · {l.result}</span></td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .top { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 16px; margin-bottom: 48px; }
+  .award { padding: 26px; display: flex; flex-direction: column; gap: 10px; }
+  .award svg { color: var(--blue); }
+  .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; font-size: 13px; min-height: 36px; }
+  .medal-year { display: flex; align-items: center; gap: 10px; }
+  .org { height: 36px; width: auto; max-width: 120px; object-fit: contain; transition: transform 0.35s var(--ease); }
+  .award:hover .org { transform: scale(1.08); }
+  .big { font: 700 30px/1 var(--font-display); }
+  .award h2 { font: 600 16px var(--font-body); letter-spacing: 0; }
+  .note { font-size: 14px; }
+
+  .log { border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; background: var(--bg); }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; min-width: 680px; border-collapse: collapse; font-size: 15px; }
+  th { text-align: left; padding: 12px 20px; font: 500 12px var(--font-mono); color: var(--muted); border-bottom: 1px solid var(--line); }
+  td { padding: 14px 20px; border-bottom: 1px solid var(--line-soft); vertical-align: top; }
+  td.mono { font-size: 13px; }
+  thead tr { background: var(--term-bg); }
+  th { color: #c9ccd4; border-bottom: 0; padding-top: 14px; padding-bottom: 14px; }
+  tbody tr { background: var(--surface); transition: background 0.2s; }
+  tbody tr:nth-child(even) { background: #f6f5f0; }
+  tbody tr:hover { background: rgba(35, 72, 224, 0.05); }
+  .js .log.is-visible tbody tr { animation: row 0.5s var(--ease) both; animation-delay: calc(var(--r) * 50ms + 150ms); }
+  @keyframes row { from { opacity: 0; filter: blur(4px); transform: translateX(-10px); } }
+  .contest { font-weight: 500; }
+  .small { font-size: 13px; }
+  .verdict { white-space: nowrap; }
+  .ac { color: var(--ok); font-size: 13px; font-weight: 500; }
+
+  @media (max-width: 640px) {
+    table { min-width: 0; }
+    thead { display: none; }
+    tbody tr { display: grid; grid-template-columns: 32px 1fr; column-gap: 12px; row-gap: 4px; padding: 14px 16px; border-bottom: 1px solid var(--line-soft); }
+    td { padding: 0; border: 0; }
+    td:first-child { grid-row: span 3; padding-top: 1px; }
+    .verdict { white-space: normal; }
+  }
+</style>

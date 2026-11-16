@@ -1,0 +1,79 @@
+---
+import Base from '../layouts/Base.astro';
+import { education, roles } from '../data/experience';
+import { formatRange } from '../lib/format';
+---
+<Base title="Experience" description="Experience of Nguyen Quoc Nghia: AI Engineer and Software Engineer Trainee at MoMo, B.Sc. at HCMUS.">
+  <p class="eyebrow" data-reveal>~/experience</p>
+  <h1 class="page-title" data-reveal style="--i:1">Where I've worked</h1>
+  <p class="lede" data-reveal style="--i:2">Two roles at MoMo so far, both on LLM systems that people use every day.</p>
+
+  <ol class="timeline" data-timeline>
+    {roles.map((r, i) => (
+      <li data-reveal style={`--i:${i + 2}`}>
+        <div class="when">
+          <p class="mono">{formatRange(r.start, r.end)}</p>
+          <p class="muted small">{r.location}</p>
+        </div>
+        <div class="rail"><span class={r.current ? 'node now' : 'node'}></span></div>
+        <div class="what">
+          <h2>{r.title} <span class="muted">· {r.company}</span></h2>
+          <p class="muted summary">{r.summary}</p>
+          {r.groups && (
+            <div class="groups focus-group">
+              {r.groups.map((g) => (
+                <div class="card group" data-group data-spotlight>
+                  <p class="mono tag">{g.name}</p>
+                  <ul>{g.bullets.map((b) => <li>{b}</li>)}</ul>
+                </div>
+              ))}
+            </div>
+          )}
+          {r.bullets && <ul class="flat">{r.bullets.map((b) => <li>{b}</li>)}</ul>}
+        </div>
+      </li>
+    ))}
+    <li data-reveal style={`--i:${roles.length + 2}`}>
+      <div class="when">
+        <p class="mono">{education.start} → {education.end}</p>
+        <p class="muted small">Education</p>
+      </div>
+      <div class="rail last"><span class="node"></span></div>
+      <div class="what">
+        <h2>{education.degree} <span class="muted">· {education.school}</span></h2>
+        <p class="edu">{education.note}</p>
+      </div>
+    </li>
+  </ol>
+</Base>
+
+<style>
+  .small { font-size: 14px; }
+  .timeline { margin: 0; padding: 0; list-style: none; }
+  .timeline > li { display: grid; grid-template-columns: minmax(0, 200px) 28px minmax(0, 1fr); gap: 0 20px; padding-bottom: 48px; }
+  .when { text-align: right; padding-top: 4px; font-size: 13px; }
+  .rail { position: relative; display: flex; justify-content: center; }
+  .rail::before { content: ''; position: absolute; top: 20px; bottom: -48px; width: 1px; background: var(--line); }
+  .rail.last::before { display: none; }
+  .node { position: relative; margin-top: 8px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--ink); background: var(--bg); }
+  .node.now { border-color: var(--blue); background: var(--blue); animation: pulse 2s infinite; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(35, 72, 224, 0.45); } 70% { box-shadow: 0 0 0 10px rgba(35, 72, 224, 0); } 100% { box-shadow: 0 0 0 0 rgba(35, 72, 224, 0); } }
+  h2 { font-size: 26px; }
+  h2 .muted { font-weight: 500; }
+  .summary { margin: 4px 0 18px; }
+  .groups { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  .group { padding: 18px 20px; }
+  .tag { font-size: 12px; color: var(--blue); margin-bottom: 8px; }
+  ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; }
+  .group ul { font-size: 15px; }
+  .flat { max-width: 46rem; }
+  .edu { margin-top: 6px; color: var(--ink-2); max-width: 46rem; }
+
+  @media (max-width: 720px) {
+    .groups { grid-template-columns: 1fr; }
+    .timeline > li { grid-template-columns: 20px minmax(0, 1fr); gap: 0 14px; }
+    .when { grid-column: 2; text-align: left; padding: 0 0 4px; }
+    .rail { grid-row: 1 / span 2; grid-column: 1; }
+    .what { grid-column: 2; }
+  }
+</style>

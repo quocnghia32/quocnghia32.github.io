@@ -1,0 +1,66 @@
+---
+import Base from '../layouts/Base.astro';
+import { publications } from '../data/publications';
+import { splitAuthors, toBibtex } from '../lib/publications';
+---
+<Base title="Publications" description="Publications of Nguyen Quoc Nghia: SOICT 2024 paper on AI-generated image recognition and a thesis on Program-of-Thought distillation.">
+  <p class="eyebrow" data-reveal>~/publications</p>
+  <h1 class="page-title" data-reveal style="--i:1">Research</h1>
+  <p class="lede" data-reveal style="--i:2">Vision, then language models. Abstracts and BibTeX open in place.</p>
+
+  <ol class="pubs">
+    {publications.map((p, i) => {
+      const a = splitAuthors(p.authors, p.me);
+      return (
+        <li data-pub data-reveal style={`--i:${i + 2}`}>
+          <div class="side">
+            <p class="year">{p.year}</p>
+            <p class="venue-tag mono">{p.venueShort}</p>
+          </div>
+          <div class="main">
+            <h2>{p.title}</h2>
+            <p class="authors">{a.before}<strong>{a.me}</strong>{a.after}</p>
+            <p class="venue">{p.venue}</p>
+            <div class="actions">
+              <button type="button" class="act" data-toggle aria-expanded="false" aria-controls={`abs-${p.id}`}>abstract</button>
+              <button type="button" class="act" data-toggle aria-expanded="false" aria-controls={`bib-${p.id}`}>bibtex</button>
+              {p.links.map((l) => (
+                <a class="act" href={l.href} target="_blank" rel="noopener noreferrer">{l.label} ↗</a>
+              ))}
+            </div>
+            <p class="panel abs" id={`abs-${p.id}`} hidden>{p.abstract}</p>
+            <pre class="panel bib" id={`bib-${p.id}`} hidden>{toBibtex(p)}</pre>
+          </div>
+        </li>
+      );
+    })}
+  </ol>
+</Base>
+
+<style>
+  .pubs { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--ink); }
+  .pubs > li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 8px 32px; padding: 32px 0; border-bottom: 1px solid var(--line); }
+  .year { font: 600 28px/1 var(--font-display); }
+  .venue-tag { display: inline-block; margin-top: 10px; padding: 3px 10px; border: 1px solid var(--ink); border-radius: 999px; font-size: 12px; }
+  h2 { font-size: 24px; font-weight: 600; line-height: 1.25; margin-bottom: 8px; }
+  .authors { font-size: 15px; color: var(--muted); margin-bottom: 4px; }
+  .authors strong { color: var(--ink); font-weight: 600; border-bottom: 1.5px solid var(--blue); }
+  .venue { font-size: 15px; font-style: italic; color: var(--ink-2); margin-bottom: 16px; }
+  .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+  .act {
+    display: inline-flex; align-items: center; min-height: 36px; padding: 0 14px; border: 1px solid var(--line);
+    background: var(--surface); border-radius: 8px; font: 500 13px var(--font-mono); color: var(--ink); cursor: pointer;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .act:hover, .act[aria-expanded='true'] { border-color: var(--blue); color: var(--blue); }
+  .panel { margin: 16px 0 0; max-width: 52rem; border-radius: 10px; animation: open 0.35s var(--ease) both; }
+  .abs { padding: 16px 18px; background: var(--surface); border: 1px solid var(--line); font-size: 15px; color: var(--ink-2); }
+  .bib { padding: 16px 18px; background: var(--term-bg); color: var(--term-ink); font: 13px/1.6 var(--font-mono); overflow-x: auto; }
+  @keyframes open { from { opacity: 0; filter: blur(6px); transform: translateY(-6px); } }
+
+  @media (max-width: 640px) {
+    .pubs > li { grid-template-columns: 1fr; }
+    .side { display: flex; align-items: center; gap: 12px; }
+    .venue-tag { margin-top: 0; }
+  }
+</style>

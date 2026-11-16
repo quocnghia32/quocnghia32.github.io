@@ -1,0 +1,21 @@
+---
+import Icon from './Icon.astro';
+import { HERO_SOCIALS } from '../lib/socials';
+---
+<div class="socials" data-socials>
+  {HERO_SOCIALS.map((s) => (
+    <a
+      class="social"
+      href={s.href}
+      aria-label={s.label}
+      title={s.label}
+      {...(s.id === 'email' ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
+    >
+      <Icon id={s.id} />
+    </a>
+  ))}
+</div>
+
+<style>
+  .socials { display: flex; flex-wrap: wrap; gap: 18px; }
+</style>

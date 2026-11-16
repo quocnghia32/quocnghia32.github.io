@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import { marquee, skillGroups } from '../data/skills';
+import { pad2 } from '../lib/format';
+---
+<Base title="Skills" description="Skills of Nguyen Quoc Nghia: LLM agents, Python, Go, C++, Kubernetes, Kafka, BigQuery and more.">
+  <p class="eyebrow" data-reveal>~/skills</p>
+  <h1 class="page-title" data-reveal style="--i:1">Toolbox</h1>
+  <p class="lede" data-reveal style="--i:2">The tools I reach for, from prompt to production.</p>
+
+  <div class="bento focus-group">
+    {skillGroups.map((g, i) => (
+      <section class={g.wide ? 'card tile wide' : 'card tile'} data-skill-group data-spotlight data-reveal style={`--i:${i % 3}`}>
+        <div class="head">
+          <h2>{g.name}</h2>
+          <span class="mono muted count">{pad2(g.items.length)}</span>
+        </div>
+        {g.note && <p class="muted note">{g.note}</p>}
+        <div class="items">{g.items.map((it) => <span class="skill">{it}</span>)}</div>
+      </section>
+    ))}
+  </div>
+
+  <div class="marquee" data-marquee aria-hidden="true">
+    <div class="track">
+      {[...marquee, ...marquee].map((m) => (
+        <>
+          <span>{m}</span>
+          <span class="star">✳</span>
+        </>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<style>
+  .bento { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 16px; }
+  .tile { padding: 24px; }
+  .wide { grid-column: 1 / -1; }
+  .head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+  h2 { font-size: 20px; font-weight: 600; }
+  .count { font-size: 12px; }
+  .note { font-size: 14px; margin-bottom: 14px; }
+  .items { display: flex; flex-wrap: wrap; gap: 8px; }
+  .skill {
+    padding: 6px 12px; border: 1px solid var(--line); background: var(--bg); border-radius: 999px; font-size: 14px;
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .skill:hover { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .marquee {
+    margin: 64px calc(-1 * var(--pad)) 0; overflow: hidden; border-block: 1px solid var(--line); padding: 18px 0;
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .track { display: flex; gap: 40px; width: max-content; font: 600 28px var(--font-display); color: #c9c8c1; white-space: nowrap; animation: marquee 40s linear infinite; }
+  .star { color: var(--blue); }
+  @keyframes marquee { to { transform: translateX(-50%); } }
+</style>

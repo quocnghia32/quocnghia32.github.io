@@ -1,0 +1,16 @@
+---
+import Base from '../layouts/Base.astro';
+---
+<Base title="Not found" description="This page does not exist on Nguyen Quoc Nghia's portfolio.">
+  <section class="nf">
+    <p class="eyebrow mono" data-reveal>verdict: Wrong Answer</p>
+    <h1 class="page-title" data-reveal style="--i:1">404, page not found</h1>
+    <p class="lede" data-reveal style="--i:2">That route is not in the judge's test set. Try one of the tabs above.</p>
+    <a class="btn btn-solid" href="/" data-reveal style="--i:3">Back home <span class="arr" aria-hidden="true">→</span></a>
+  </section>
+</Base>
+
+<style>
+  .nf { min-height: 50vh; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; }
+  .eyebrow { color: #b42318; }
+</style>

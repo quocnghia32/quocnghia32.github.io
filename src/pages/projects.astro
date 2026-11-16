@@ -1,0 +1,107 @@
+---
+import Base from '../layouts/Base.astro';
+import { featured, projects } from '../data/projects';
+import { CATEGORY_FILTERS, numberProjects } from '../lib/projects';
+
+const numbered = numberProjects(projects);
+const groups = [
+  { id: 'main', label: 'Projects', title: '', note: '', items: numbered.filter((p) => p.category !== 'quant') },
+  { id: 'fun', label: 'Built for fun', title: 'Built for fun', note: 'Trading strategies on VN30 futures, from a quant course.', items: numbered.filter((p) => p.category === 'quant') },
+];
+---
+<Base title="Projects" description="Research, LLM agents, quant strategies and systems projects by Nguyen Quoc Nghia.">
+  <p class="eyebrow" data-reveal>~/projects</p>
+  <h1 class="page-title" data-reveal style="--i:1">Things I've built</h1>
+  <p class="lede" data-reveal style="--i:2">Research, agents and systems, plus a couple of trading strategies built for fun. Work done inside MoMo lives on the Experience page.</p>
+
+  <div class="filters" role="group" aria-label="Filter projects" data-reveal style="--i:3">
+    {CATEGORY_FILTERS.map((f) => (
+      <button type="button" data-filter={f.id} aria-pressed={f.id === 'all' ? 'true' : 'false'}>{f.label}</button>
+    ))}
+  </div>
+
+  <article class="card featured" data-featured data-spotlight data-reveal style="--i:4">
+    <div class="f-copy">
+      <p class="mono small muted">01 · {featured.eyebrow}</p>
+      <h2>{featured.title}</h2>
+      <p class="desc">{featured.description}</p>
+      <p class="mono small muted">{featured.tags.join(' · ')}</p>
+    </div>
+    <dl class="metrics">
+      {featured.metrics.map((m) => (
+        <div>
+          <dt>{m.label}</dt>
+          <dd class={m.accent ? 'accent' : undefined}>{m.value}</dd>
+        </div>
+      ))}
+    </dl>
+  </article>
+
+  {groups.map((g) => (
+    <section class="group" data-project-group={g.id} aria-label={g.label}>
+      {g.title && (
+        <div class="group-head">
+          <h2>{g.title}</h2>
+          <p class="muted">{g.note}</p>
+        </div>
+      )}
+      <div class={g.id === 'fun' ? 'grid two' : 'grid'}>
+        {g.items.map((p, i) => (
+          <article class="card project" data-project data-category={p.category} data-spotlight data-reveal style={`--i:${i % 3}`}>
+            <span class="num" aria-hidden="true">{p.num}</span>
+            <p class="mono small muted">{p.tag} · {p.date}</p>
+            <h3>{p.title}</h3>
+            <p class="desc">{p.description}</p>
+            <div class="stack">{p.stack.map((s) => <span class="chip">{s}</span>)}</div>
+            {p.link && (
+              <a class="out" href={p.link.href} target="_blank" rel="noopener noreferrer">
+                {p.link.label} <span class="arr" aria-hidden="true">↗</span>
+              </a>
+            )}
+          </article>
+        ))}
+      </div>
+    </section>
+  ))}
+</Base>
+
+<style>
+  .small { font-size: 12px; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+  .filters button {
+    min-height: 40px; padding: 0 16px; border-radius: 999px; cursor: pointer;
+    font: 500 14px var(--font-body); border: 1px solid var(--line); background: var(--surface); color: var(--ink-2);
+    transition: background 0.2s, color 0.2s, border-color 0.2s;
+  }
+  .filters button:hover { border-color: var(--ink); }
+  .filters button[aria-pressed='true'] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  .featured {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+    gap: 32px; padding: 36px; margin-bottom: 20px; border-radius: 20px;
+  }
+  .f-copy { display: flex; flex-direction: column; gap: 14px; }
+  .featured h2 { font-size: 30px; line-height: 1.15; }
+  .desc { color: var(--ink-2); }
+  .metrics { margin: 0; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: center; border-top: 1px solid var(--ink); }
+  .metrics div { padding: 16px 12px 16px 0; border-bottom: 1px solid var(--line); }
+  .metrics div:nth-child(even) { padding-left: 16px; border-left: 1px solid var(--line); }
+  .metrics dt { font-size: 13px; color: var(--muted); }
+  .metrics dd { margin: 2px 0 0; font: 600 32px var(--font-display); }
+  .metrics .accent { color: var(--blue); }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr)); gap: 16px; }
+  .grid.two { grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); }
+  .group + .group { margin-top: 56px; }
+  .group[hidden] { display: none; }
+  .group-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 16px; margin-bottom: 18px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .group-head h2 { font-size: 24px; font-weight: 600; }
+  .project { padding: 26px; display: flex; flex-direction: column; gap: 10px; }
+  .project[hidden] { display: none; }
+  .num { position: absolute !important; right: 16px; bottom: 6px; font: 700 72px/1 var(--font-display); color: var(--ghost); pointer-events: none; }
+  .project h3 { font-size: 21px; font-weight: 600; line-height: 1.25; }
+  .project .desc { font-size: 15px; flex-grow: 1; }
+  .stack { display: flex; flex-wrap: wrap; gap: 6px; }
+  .out { align-self: flex-start; display: inline-flex; align-items: center; gap: 6px; min-height: 40px; font-size: 14px; font-weight: 600; }
+  .featured[hidden] { display: none; }
+</style>
